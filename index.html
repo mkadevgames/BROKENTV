@@ -192,4 +192,161 @@
             <div class="grid" id="favorites-grid"></div>
         </div>
 
-        <div id="
+        <div id="categories"></div>
+    </main>
+
+    <script>
+        const playlistUrl = 'https://raw.githubusercontent.com/joaoguidugli/FTA-IPTV-Brasil/master/playlist.m3u8';
+        let channels = [];
+        let favorites = [];
+        let currentProfile = '';
+
+        function login() {
+            const name = document.getElementById('profile-name').value.trim() || 'Usuário';
+            currentProfile = name;
+            localStorage.setItem('brokenTvProfile', name);
+
+            const savedFavs = localStorage.getItem('brokenTvFavorites_' + name);
+            favorites = savedFavs ? JSON.parse(savedFavs) : [];
+
+            document.getElementById('avatar').textContent = name[0].toUpperCase();
+            document.getElementById('profile-name-header').textContent = name;
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+
+            loadPlaylist();
+        }
+
+        if (localStorage.getItem('brokenTvProfile')) {
+            currentProfile = localStorage.getItem('brokenTvProfile');
+            document.getElementById('profile-name').value = currentProfile;
+            login();
+        }
+
+        async function loadPlaylist() {
+            try {
+                const response = await fetch(playlistUrl);
+                const text = await response.text();
+                channels = parseM3U(text);
+                renderChannels();
+            } catch (e) {
+                alert('Erro ao carregar a playlist. Tente novamente mais tarde.');
+            }
+        }
+
+        function parseM3U(text) {
+            const lines = text.split('\n');
+            const result = [];
+            let current = null;
+
+            for (let line of lines) {
+                line = line.trim();
+                if (line.startsWith('#EXTINF:')) {
+                    const nameMatch = line.match(/,(.+)$/);
+                    const groupMatch = line.match(/group-title="([^"]+)"/);
+                    current = {
+                        name: nameMatch ? nameMatch[1].trim() : 'Canal Sem Nome',
+                        group: groupMatch ? groupMatch[1] : 'Outros',
+                        url: ''
+                    };
+                } else if (line && !line.startsWith('#') && current) {
+                    current.url = line;
+                    if (current.url) result.push(current);
+                    current = null;
+                }
+            }
+            return result;
+        }
+
+        function renderChannels() {
+            const categoriesDiv = document.getElementById('categories');
+            categoriesDiv.innerHTML = '';
+
+            // Favoritos primeiro
+            renderGrid(document.getElementById('favorites-grid'), channels.filter(ch => favorites.includes(ch.url)));
+
+            // Por categoria
+            const groups = [...new Set(channels.map(ch => ch.group))].sort();
+            groups.forEach(group => {
+                const groupChannels = channels.filter(ch => ch.group === group);
+                if (groupChannels.length === 0) return;
+
+                const section = document.createElement('div');
+                section.className = 'section';
+                section.innerHTML = `<h2>${group}</h2><div class="grid" data-group="${group}"></div>`;
+                categoriesDiv.appendChild(section);
+
+                renderGrid(section.querySelector('.grid'), groupChannels);
+            });
+
+            setupSearch();
+        }
+
+        function renderGrid(grid, channelList) {
+            grid.innerHTML = '';
+            channelList.forEach(channel => {
+                const card = document.createElement('div');
+                card.className = 'channel-card';
+                card.innerHTML = `
+                    <div class="channel-name">${channel.name}</div>
+                    <span class="favorite ${favorites.includes(channel.url) ? 'active' : ''}" onclick="toggleFavorite('${channel.url.replace(/'/g, "\\'")}', event)">♥</span>
+                `;
+                card.onclick = (e) => {
+                    if (!e.target.classList.contains('favorite')) playChannel(channel.url);
+                };
+                grid.appendChild(card);
+            });
+        }
+
+        function toggleFavorite(url, event) {
+            event.stopPropagation();
+            if (favorites.includes(url)) {
+                favorites = favorites.filter(f => f !== url);
+            } else {
+                favorites.push(url);
+            }
+            localStorage.setItem('brokenTvFavorites_' + currentProfile, JSON.stringify(favorites));
+            renderChannels(); // atualiza tudo
+        }
+
+        function setupSearch() {
+            document.getElementById('search').addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                document.querySelectorAll('.grid').forEach(grid => {
+                    const cards = grid.querySelectorAll('.channel-card');
+                    cards.forEach(card => {
+                        const name = card.querySelector('.channel-name').textContent.toLowerCase();
+                        card.style.display = name.includes(term) ? 'flex' : 'none';
+                    });
+                });
+            });
+        }
+
+        let currentHls = null;
+        function playChannel(url) {
+            document.getElementById('player-container').style.display = 'flex';
+            const video = document.getElementById('video');
+
+            if (Hls.isSupported()) {
+                if (currentHls) currentHls.destroy();
+                currentHls = new Hls();
+                currentHls.loadSource(url);
+                currentHls.attachMedia(video);
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = url;
+            } else {
+                alert('Seu navegador não suporta reprodução HLS. Use um app IPTV externo ou navegador mais novo.');
+            }
+        }
+
+        function closePlayer() {
+            document.getElementById('player-container').style.display = 'none';
+            if (currentHls) {
+                currentHls.destroy();
+                currentHls = null;
+            }
+            document.getElementById('video').src = '';
+        }
+    </script>
+</body>
+</html>
