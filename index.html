@@ -1,352 +1,394 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Broken TV</title>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <style>
-        :root {
-            --bg: #000;
-            --primary: #E50914;
-            --text: #fff;
-            --card: #141414;
-        }
-        body {
-            margin: 0;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-        }
-        header {
-            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 10;
-            box-sizing: border-box;
-        }
-        .logo {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--primary);
-        }
-        .search {
-            padding: 10px;
-            width: 300px;
-            max-width: 100%;
-            border: none;
-            border-radius: 4px;
-            background: #333;
-            color: white;
-        }
-        .profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .avatar {
-            width: 40px;
-            height: 40px;
-            background: var(--primary);
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-        main {
-            margin-top: 80px;
-            padding: 20px;
-        }
-        .section {
-            margin-bottom: 60px;
-        }
-        h2 {
-            margin-bottom: 20px;
-            font-size: 1.8rem;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 15px;
-        }
-        .channel-card {
-            background: var(--card);
-            padding: 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.3s;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .channel-card:hover {
-            transform: scale(1.05);
-        }
-        .channel-name {
-            font-size: 1.2rem;
-        }
-        .favorite {
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-        .favorite.active {
-            color: var(--primary);
-        }
-        #player-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: black;
-            z-index: 20;
-            display: none;
-            flex-direction: column;
-        }
-        #video {
-            width: 100%;
-            height: 100%;
-        }
-        #close-player {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 2rem;
-            cursor: pointer;
-            color: white;
-            z-index: 30;
-        }
-        #login-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--bg);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 50;
-        }
-        #login-screen input {
-            padding: 15px;
-            width: 300px;
-            max-width: 90%;
-            margin: 20px;
-            font-size: 1.2rem;
-            border-radius: 4px;
-            border: none;
-        }
-        #login-screen button {
-            padding: 15px 30px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 1.2rem;
-            cursor: pointer;
-        }
-        @media (max-width: 768px) {
-            .grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .search {
-                width: 200px;
-            }
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BrokenTV</title>
+<meta name="color-scheme" content="dark">
+
+<style>
+  :root {
+    --bg: #0f001a;
+    --purple: #7c3aed;
+    --purple-dark: #5b21b6;
+    --purple-glow: #a78bfa;
+    --text: #e9d5ff;
+    --text-soft: #c4b5fd;
+    --card: #1a0033;
+  }
+
+  * {
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: system-ui, -apple-system, BlinkMacOSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100dvh;
+    background-image: 
+      radial-gradient(circle at 15% 50%, rgba(124,58,237,0.12) 0%, transparent 25%),
+      radial-gradient(circle at 85% 30%, rgba(167,139,250,0.08) 0%, transparent 35%);
+  }
+
+  header {
+    padding: 1rem 1.5rem;
+    background: linear-gradient(to bottom, rgba(30,10,60,0.7), transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid rgba(124,58,237,0.15);
+  }
+
+  h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #c084fc, #a78bfa, #7c3aed);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+  }
+
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: var(--card);
+    border-radius: 16px;
+    border: 1px solid rgba(124,58,237,0.2);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+
+  input[type="url"], input[type="text"], input[type="file"] {
+    flex: 1;
+    min-width: 220px;
+    padding: 0.7rem 1rem;
+    border: 1px solid rgba(124,58,237,0.3);
+    border-radius: 10px;
+    background: rgba(30,10,60,0.4);
+    color: var(--text);
+    font-size: 0.95rem;
+  }
+
+  input:focus {
+    outline: none;
+    border-color: var(--purple);
+    box-shadow: 0 0 0 3px rgba(124,58,237,0.25);
+  }
+
+  button {
+    padding: 0.7rem 1.4rem;
+    border: none;
+    border-radius: 10px;
+    background: var(--purple);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  button:hover {
+    background: var(--purple-glow);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(124,58,237,0.4);
+  }
+
+  button:active {
+    transform: translateY(1px);
+  }
+
+  .player-container {
+    margin: 2rem 0;
+    border-radius: 16px;
+    overflow: hidden;
+    background: black;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6),
+                inset 0 0 60px rgba(124,58,237,0.08);
+    position: relative;
+    aspect-ratio: 16 / 9;
+    max-width: 100%;
+  }
+
+  video, audio {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #000;
+  }
+
+  .playlist {
+    margin-top: 1.5rem;
+    background: var(--card);
+    border-radius: 16px;
+    padding: 1.2rem;
+    border: 1px solid rgba(124,58,237,0.2);
+    max-height: 50vh;
+    overflow-y: auto;
+  }
+
+  .playlist-item {
+    padding: 0.8rem 1rem;
+    margin: 0.4rem 0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: rgba(30,10,60,0.3);
+  }
+
+  .playlist-item:hover,
+  .playlist-item.current {
+    background: rgba(124,58,237,0.25);
+    transform: translateX(6px);
+  }
+
+  .playlist-item.current {
+    border-left: 4px solid var(--purple);
+    font-weight: 600;
+  }
+
+  footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-soft);
+    font-size: 0.85rem;
+    opacity: 0.7;
+  }
+
+  @media (max-width: 600px) {
+    .controls { flex-direction: column; }
+    h1 { font-size: 1.6rem; }
+  }
+</style>
 </head>
 <body>
 
-    <div id="login-screen">
-        <h1 class="logo">Broken TV</h1>
-        <input type="text" id="profile-name" placeholder="Digite seu nome de perfil">
-        <button onclick="login()">Entrar</button>
+<header>
+  <h1>Broken<span style="opacity:0.8">TV</span></h1>
+</header>
+
+<div class="container">
+
+  <div class="controls">
+    <input type="url" id="m3uUrl" placeholder="Cole a URL da sua lista .m3u / .m3u8" autocomplete="off"/>
+    <button onclick="loadM3UFromUrl()">Carregar Lista</button>
+    
+    <input type="file" id="localFiles" multiple accept="video/*,audio/*,.m3u,.m3u8"/>
+    <button onclick="loadLocalFiles()">Adicionar arquivos locais</button>
+  </div>
+
+  <div class="player-container">
+    <video id="mainPlayer" controls autoplay></video>
+    <!-- <audio id="mainPlayer" controls></audio> → descomente se quiser usar só áudio -->
+  </div>
+
+  <div class="playlist" id="playlist">
+    <div style="opacity:0.6; padding:1rem; text-align:center;">
+      Carregue uma lista ou arquivos para começar...
     </div>
+  </div>
 
-    <header>
-        <div class="logo">Broken TV</div>
-        <input type="text" class="search" id="search" placeholder="Pesquisar canais...">
-        <div class="profile">
-            <div class="avatar" id="avatar"></div>
-            <span id="profile-name-header"></span>
-        </div>
-    </header>
+</div>
 
-    <main id="main-content" style="display:none;">
-        <div id="player-container">
-            <div id="close-player" onclick="closePlayer()">✖</div>
-            <video id="video" controls autoplay></video>
-        </div>
+<footer>
+  BrokenTV • LocalStorage • 2025–2026
+</footer>
 
-        <div class="section">
-            <h2>Favoritos</h2>
-            <div class="grid" id="favorites-grid"></div>
-        </div>
+<script>
+// =============================================
+// BrokenTV - Mini player com M3U + local files
+// =============================================
 
-        <div id="categories"></div>
-    </main>
+const player = document.getElementById('mainPlayer');
+const playlistEl = document.getElementById('playlist');
+let currentPlaylist = [];
+let currentIndex = -1;
 
-    <script>
-        const playlistUrl = 'https://raw.githubusercontent.com/Ramys/Iptv-Brasil-2025/refs/heads/master/CanaisBR01.m3u8';
-        let channels = [];
-        let favorites = [];
-        let currentProfile = '';
+const STORAGE_KEY = 'brokenTV_lastState';
 
-        function login() {
-            const name = document.getElementById('profile-name').value.trim() || 'Usuário';
-            currentProfile = name;
-            localStorage.setItem('brokenTvProfile', name);
+// Carrega estado anterior
+function loadLastState() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (!saved) return;
+    
+    const data = JSON.parse(saved);
+    currentPlaylist = data.playlist || [];
+    currentIndex = data.index || -1;
 
-            const savedFavs = localStorage.getItem('brokenTvFavorites_' + name);
-            favorites = savedFavs ? JSON.parse(savedFavs) : [];
+    if (currentPlaylist.length > 0) {
+      renderPlaylist();
+      if (currentIndex >= 0 && currentIndex < currentPlaylist.length) {
+        playItem(currentIndex);
+      }
+    }
+  } catch(e) {}
+}
 
-            document.getElementById('avatar').textContent = name[0].toUpperCase();
-            document.getElementById('profile-name-header').textContent = name;
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('main-content').style.display = 'block';
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      playlist: currentPlaylist,
+      index: currentIndex
+    }));
+  } catch(e) {}
+}
 
-            loadPlaylist();
-        }
+function renderPlaylist() {
+  playlistEl.innerHTML = '';
+  
+  if (currentPlaylist.length === 0) {
+    playlistEl.innerHTML = '<div style="opacity:0.6;padding:2rem;text-align:center;">Nenhum item na playlist...</div>';
+    return;
+  }
 
-        if (localStorage.getItem('brokenTvProfile')) {
-            currentProfile = localStorage.getItem('brokenTvProfile');
-            document.getElementById('profile-name').value = currentProfile;
-            login();
-        }
+  currentPlaylist.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'playlist-item';
+    if (i === currentIndex) div.classList.add('current');
+    
+    div.textContent = item.name || item.url.split('/').pop() || 'Sem título';
+    div.title = item.url;
+    
+    div.onclick = () => playItem(i);
+    playlistEl.appendChild(div);
+  });
+}
 
-        async function loadPlaylist() {
-            try {
-                const response = await fetch(playlistUrl);
-                const text = await response.text();
-                channels = parseM3U(text);
-                renderChannels();
-            } catch (e) {
-                alert('Erro ao carregar a playlist. Tente novamente mais tarde.');
-            }
-        }
+function playItem(index) {
+  if (index < 0 || index >= currentPlaylist.length) return;
+  
+  currentIndex = index;
+  renderPlaylist();
+  
+  const item = currentPlaylist[index];
+  player.src = item.url;
+  player.title = item.name || 'Reproduzindo...';
+  
+  player.play().catch(e => console.log("Autoplay bloqueado:", e));
+  
+  saveState();
+}
 
-        function parseM3U(text) {
-            const lines = text.split('\n');
-            const result = [];
-            let current = null;
+player.onended = () => {
+  if (currentIndex < currentPlaylist.length - 1) {
+    playItem(currentIndex + 1);
+  }
+};
 
-            for (let line of lines) {
-                line = line.trim();
-                if (line.startsWith('#EXTINF:')) {
-                    const nameMatch = line.match(/,(.+)$/);
-                    const groupMatch = line.match(/group-title="([^"]+)"/);
-                    current = {
-                        name: nameMatch ? nameMatch[1].trim() : 'Canal Sem Nome',
-                        group: groupMatch ? groupMatch[1] : 'Outros',
-                        url: ''
-                    };
-                } else if (line && !line.startsWith('#') && current) {
-                    current.url = line;
-                    if (current.url) result.push(current);
-                    current = null;
-                }
-            }
-            return result;
-        }
+// ======================
+//  CARREGAR M3U via URL
+// ======================
+async function loadM3UFromUrl() {
+  const url = document.getElementById('m3uUrl').value.trim();
+  if (!url) return alert('Digite uma URL válida!');
 
-        function renderChannels() {
-            const categoriesDiv = document.getElementById('categories');
-            categoriesDiv.innerHTML = '';
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('Falha ao carregar lista');
+    
+    const text = await response.text();
+    parseAndLoadM3U(text, url);
+    
+  } catch(e) {
+    alert('Erro ao carregar a lista M3U:\n' + e.message);
+  }
+}
 
-            // Favoritos primeiro
-            renderGrid(document.getElementById('favorites-grid'), channels.filter(ch => favorites.includes(ch.url)));
+// ======================
+//  PARSE M3U (simples)
+// ======================
+function parseAndLoadM3U(text, baseUrl = '') {
+  const lines = text.split('\n').map(l => l.trim());
+  const items = [];
+  
+  let currentName = null;
 
-            // Por categoria
-            const groups = [...new Set(channels.map(ch => ch.group))].sort();
-            groups.forEach(group => {
-                const groupChannels = channels.filter(ch => ch.group === group);
-                if (groupChannels.length === 0) return;
+  for (const line of lines) {
+    if (line.startsWith('#EXTINF')) {
+      // tenta pegar nome (bem simples)
+      const nameMatch = line.match(/,(.+)/);
+      currentName = nameMatch ? nameMatch[1].trim() : null;
+    }
+    else if (line && !line.startsWith('#')) {
+      let finalUrl = line;
+      if (!line.startsWith('http') && baseUrl) {
+        try {
+          finalUrl = new URL(line, baseUrl).href;
+        } catch(_) {}
+      }
+      
+      items.push({
+        name: currentName || finalUrl.split('/').pop(),
+        url: finalUrl
+      });
+      currentName = null;
+    }
+  }
 
-                const section = document.createElement('div');
-                section.className = 'section';
-                section.innerHTML = `<h2>${group}</h2><div class="grid" data-group="${group}"></div>`;
-                categoriesDiv.appendChild(section);
+  if (items.length > 0) {
+    currentPlaylist = items;
+    currentIndex = 0;
+    renderPlaylist();
+    playItem(0);
+    saveState();
+  } else {
+    alert('Nenhum canal válido encontrado na lista :(');
+  }
+}
 
-                renderGrid(section.querySelector('.grid'), groupChannels);
-            });
+// ======================
+//  ARQUIVOS LOCAIS
+// ======================
+function loadLocalFiles() {
+  const input = document.getElementById('localFiles');
+  const files = input.files;
+  
+  if (!files?.length) return;
 
-            setupSearch();
-        }
+  const newItems = Array.from(files).map(file => ({
+    name: file.name,
+    url: URL.createObjectURL(file)
+  }));
 
-        function renderGrid(grid, channelList) {
-            grid.innerHTML = '';
-            channelList.forEach(channel => {
-                const card = document.createElement('div');
-                card.className = 'channel-card';
-                card.innerHTML = `
-                    <div class="channel-name">${channel.name}</div>
-                    <span class="favorite ${favorites.includes(channel.url) ? 'active' : ''}" onclick="toggleFavorite('${channel.url.replace(/'/g, "\\'")}', event)">♥</span>
-                `;
-                card.onclick = (e) => {
-                    if (!e.target.classList.contains('favorite')) playChannel(channel.url);
-                };
-                grid.appendChild(card);
-            });
-        }
+  // Adiciona no final da playlist atual
+  currentPlaylist = [...currentPlaylist, ...newItems];
+  
+  if (currentIndex === -1 && currentPlaylist.length > 0) {
+    currentIndex = 0;
+  }
 
-        function toggleFavorite(url, event) {
-            event.stopPropagation();
-            if (favorites.includes(url)) {
-                favorites = favorites.filter(f => f !== url);
-            } else {
-                favorites.push(url);
-            }
-            localStorage.setItem('brokenTvFavorites_' + currentProfile, JSON.stringify(favorites));
-            renderChannels(); // atualiza tudo
-        }
+  renderPlaylist();
+  saveState();
 
-        function setupSearch() {
-            document.getElementById('search').addEventListener('input', (e) => {
-                const term = e.target.value.toLowerCase();
-                document.querySelectorAll('.grid').forEach(grid => {
-                    const cards = grid.querySelectorAll('.channel-card');
-                    cards.forEach(card => {
-                        const name = card.querySelector('.channel-name').textContent.toLowerCase();
-                        card.style.display = name.includes(term) ? 'flex' : 'none';
-                    });
-                });
-            });
-        }
+  // limpa input
+  input.value = '';
+}
 
-        let currentHls = null;
-        function playChannel(url) {
-            document.getElementById('player-container').style.display = 'flex';
-            const video = document.getElementById('video');
+// Inicialização
+loadLastState();
 
-            if (Hls.isSupported()) {
-                if (currentHls) currentHls.destroy();
-                currentHls = new Hls();
-                currentHls.loadSource(url);
-                currentHls.attachMedia(video);
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = url;
-            } else {
-                alert('Seu navegador não suporta reprodução HLS. Use um app IPTV externo ou navegador mais novo.');
-            }
-        }
-
-        function closePlayer() {
-            document.getElementById('player-container').style.display = 'none';
-            if (currentHls) {
-                currentHls.destroy();
-                currentHls = null;
-            }
-            document.getElementById('video').src = '';
-        }
-    </script>
+// Teclas rápidas (opcional)
+document.addEventListener('keydown', e => {
+  if (e.code === 'ArrowRight' && currentIndex < currentPlaylist.length - 1) {
+    playItem(currentIndex + 1);
+  }
+  if (e.code === 'ArrowLeft' && currentIndex > 0) {
+    playItem(currentIndex - 1);
+  }
+});
+</script>
 </body>
 </html>
