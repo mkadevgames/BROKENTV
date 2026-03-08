@@ -1,394 +1,205 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>BrokenTV</title>
-<meta name="color-scheme" content="dark">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BLUE POINT • Sistema</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0d1b2a 0%, #1b263b 100%);
+      color: #e0e1dd;
+      font-family: 'Roboto', sans-serif;
+      overflow-x: hidden;
+    }
 
-<style>
-  :root {
-    --bg: #0f001a;
-    --purple: #7c3aed;
-    --purple-dark: #5b21b6;
-    --purple-glow: #a78bfa;
-    --text: #e9d5ff;
-    --text-soft: #c4b5fd;
-    --card: #1a0033;
-  }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px;
+    }
 
-  * {
-    margin:0;
-    padding:0;
-    box-sizing: border-box;
-  }
+    header {
+      text-align: center;
+      padding: 80px 20px 60px;
+    }
 
-  body {
-    font-family: system-ui, -apple-system, BlinkMacOSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100dvh;
-    background-image: 
-      radial-gradient(circle at 15% 50%, rgba(124,58,237,0.12) 0%, transparent 25%),
-      radial-gradient(circle at 85% 30%, rgba(167,139,250,0.08) 0%, transparent 35%);
-  }
+    .logo {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(3.5rem, 12vw, 9rem);
+      font-weight: 700;
+      background: linear-gradient(90deg, #00d4ff, #7cffc4, #00d4ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 40px rgba(0, 212, 255, 0.4);
+      letter-spacing: 4px;
+      margin-bottom: 8px;
+      animation: glow 3s ease-in-out infinite alternate;
+    }
 
-  header {
-    padding: 1rem 1.5rem;
-    background: linear-gradient(to bottom, rgba(30,10,60,0.7), transparent);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    border-bottom: 1px solid rgba(124,58,237,0.15);
-  }
+    @keyframes glow {
+      from { text-shadow: 0 0 20px rgba(0,212,255,0.5); }
+      to   { text-shadow: 0 0 60px rgba(0,212,255,0.9), 0 0 100px rgba(124,255,196,0.6); }
+    }
 
-  h1 {
-    font-size: 1.8rem;
-    font-weight: 700;
-    background: linear-gradient(90deg, #c084fc, #a78bfa, #7c3aed);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    display: inline-block;
-  }
+    .subtitle {
+      font-size: clamp(1.3rem, 5vw, 2.2rem);
+      color: #778da9;
+      margin: 12px 0 40px;
+      font-weight: 300;
+    }
 
-  .container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 1rem;
-  }
+    .made-by {
+      font-size: 1.1rem;
+      color: #415a77;
+      margin-bottom: 60px;
+    }
 
-  .controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin: 1.5rem 0;
-    padding: 1rem;
-    background: var(--card);
-    border-radius: 16px;
-    border: 1px solid rgba(124,58,237,0.2);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-  }
+    .made-by strong {
+      color: #a3c2ff;
+    }
 
-  input[type="url"], input[type="text"], input[type="file"] {
-    flex: 1;
-    min-width: 220px;
-    padding: 0.7rem 1rem;
-    border: 1px solid rgba(124,58,237,0.3);
-    border-radius: 10px;
-    background: rgba(30,10,60,0.4);
-    color: var(--text);
-    font-size: 0.95rem;
-  }
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 48px;
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: white;
+      background: linear-gradient(45deg, #00c6ff, #0072ff);
+      border: none;
+      border-radius: 50px;
+      text-decoration: none;
+      box-shadow: 0 10px 30px rgba(0, 114, 255, 0.4);
+      transition: all 0.35s ease;
+      position: relative;
+      overflow: hidden;
+    }
 
-  input:focus {
-    outline: none;
-    border-color: var(--purple);
-    box-shadow: 0 0 0 3px rgba(124,58,237,0.25);
-  }
+    .download-btn:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 50px rgba(0, 114, 255, 0.6);
+      background: linear-gradient(45deg, #00eaff, #0095ff);
+    }
 
-  button {
-    padding: 0.7rem 1.4rem;
-    border: none;
-    border-radius: 10px;
-    background: var(--purple);
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.25s ease;
-  }
+    .download-btn:active {
+      transform: translateY(-2px);
+    }
 
-  button:hover {
-    background: var(--purple-glow);
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(124,58,237,0.4);
-  }
+    .btn-icon {
+      font-size: 1.6rem;
+    }
 
-  button:active {
-    transform: translateY(1px);
-  }
+    .features {
+      margin: 100px 0 60px;
+      text-align: center;
+    }
 
-  .player-container {
-    margin: 2rem 0;
-    border-radius: 16px;
-    overflow: hidden;
-    background: black;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.6),
-                inset 0 0 60px rgba(124,58,237,0.08);
-    position: relative;
-    aspect-ratio: 16 / 9;
-    max-width: 100%;
-  }
+    .features h2 {
+      font-family: 'Orbitron', sans-serif;
+      color: #00d4ff;
+      font-size: 2.4rem;
+      margin-bottom: 40px;
+      opacity: 0.9;
+    }
 
-  video, audio {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    background: #000;
-  }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      padding: 0 10px;
+    }
 
-  .playlist {
-    margin-top: 1.5rem;
-    background: var(--card);
-    border-radius: 16px;
-    padding: 1.2rem;
-    border: 1px solid rgba(124,58,237,0.2);
-    max-height: 50vh;
-    overflow-y: auto;
-  }
+    .feature-card {
+      background: rgba(27, 38, 59, 0.5);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 212, 255, 0.12);
+      border-radius: 16px;
+      padding: 32px 24px;
+      transition: all 0.3s ease;
+    }
 
-  .playlist-item {
-    padding: 0.8rem 1rem;
-    margin: 0.4rem 0;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    background: rgba(30,10,60,0.3);
-  }
+    .feature-card:hover {
+      transform: translateY(-12px);
+      border-color: #00d4ff;
+      box-shadow: 0 20px 40px rgba(0, 212, 255, 0.15);
+    }
 
-  .playlist-item:hover,
-  .playlist-item.current {
-    background: rgba(124,58,237,0.25);
-    transform: translateX(6px);
-  }
+    .feature-card h3 {
+      color: #00d4ff;
+      margin-bottom: 16px;
+      font-size: 1.4rem;
+    }
 
-  .playlist-item.current {
-    border-left: 4px solid var(--purple);
-    font-weight: 600;
-  }
+    footer {
+      text-align: center;
+      padding: 60px 20px 40px;
+      color: #415a77;
+      font-size: 0.95rem;
+    }
 
-  footer {
-    text-align: center;
-    padding: 2rem;
-    color: var(--text-soft);
-    font-size: 0.85rem;
-    opacity: 0.7;
-  }
-
-  @media (max-width: 600px) {
-    .controls { flex-direction: column; }
-    h1 { font-size: 1.6rem; }
-  }
-</style>
+    @media (max-width: 600px) {
+      header { padding: 60px 15px 40px; }
+      .download-btn { padding: 16px 40px; font-size: 1.15rem; }
+      .feature-grid { gap: 20px; }
+    }
+  </style>
 </head>
 <body>
 
-<header>
-  <h1>Broken<span style="opacity:0.8">TV</span></h1>
-</header>
+  <div class="container">
+    <header>
+      <h1 class="logo">BLUE POINT</h1>
+      <div class="subtitle">Sistema completo e avançado</div>
+      <div class="made-by">Desenvolvido por <strong>Marko</strong></div>
 
-<div class="container">
+      <a href="https://mega.nz/file/vlx2QRpY#TBAljgOtOAsMJFApODKF9BcrEQQkyD0_osjmGCwb4IU" 
+         class="download-btn" 
+         target="_blank" 
+         rel="noopener noreferrer">
+        <span class="btn-icon">⬇</span> BAIXAR AGORA
+      </a>
+    </header>
 
-  <div class="controls">
-    <input type="url" id="m3uUrl" placeholder="Cole a URL da sua lista .m3u / .m3u8" autocomplete="off"/>
-    <button onclick="loadM3UFromUrl()">Carregar Lista</button>
-    
-    <input type="file" id="localFiles" multiple accept="video/*,audio/*,.m3u,.m3u8"/>
-    <button onclick="loadLocalFiles()">Adicionar arquivos locais</button>
+    <section class="features">
+      <h2>O que tem no BLUE POINT?</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h3>Interface Moderna</h3>
+          <p>Design limpo, escuro e futurista otimizado para PC e celular.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Alta Performance</h3>
+          <p>Carregamento rápido e consumo otimizado de recursos.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Recursos Avançados</h3>
+          <p>Ferramentas poderosas para controle, monitoramento e automação.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Segurança Reforçada</h3>
+          <p>Proteção em várias camadas para seus dados e operação.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      BLUE POINT © 2025 — Feito com 💙 por Marko<br>
+      Versão atual: 1.0 | Link oficial de download
+    </footer>
   </div>
 
-  <div class="player-container">
-    <video id="mainPlayer" controls autoplay></video>
-    <!-- <audio id="mainPlayer" controls></audio> → descomente se quiser usar só áudio -->
-  </div>
-
-  <div class="playlist" id="playlist">
-    <div style="opacity:0.6; padding:1rem; text-align:center;">
-      Carregue uma lista ou arquivos para começar...
-    </div>
-  </div>
-
-</div>
-
-<footer>
-  BrokenTV • LocalStorage • 2025–2026
-</footer>
-
-<script>
-// =============================================
-// BrokenTV - Mini player com M3U + local files
-// =============================================
-
-const player = document.getElementById('mainPlayer');
-const playlistEl = document.getElementById('playlist');
-let currentPlaylist = [];
-let currentIndex = -1;
-
-const STORAGE_KEY = 'brokenTV_lastState';
-
-// Carrega estado anterior
-function loadLastState() {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (!saved) return;
-    
-    const data = JSON.parse(saved);
-    currentPlaylist = data.playlist || [];
-    currentIndex = data.index || -1;
-
-    if (currentPlaylist.length > 0) {
-      renderPlaylist();
-      if (currentIndex >= 0 && currentIndex < currentPlaylist.length) {
-        playItem(currentIndex);
-      }
-    }
-  } catch(e) {}
-}
-
-function saveState() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({
-      playlist: currentPlaylist,
-      index: currentIndex
-    }));
-  } catch(e) {}
-}
-
-function renderPlaylist() {
-  playlistEl.innerHTML = '';
-  
-  if (currentPlaylist.length === 0) {
-    playlistEl.innerHTML = '<div style="opacity:0.6;padding:2rem;text-align:center;">Nenhum item na playlist...</div>';
-    return;
-  }
-
-  currentPlaylist.forEach((item, i) => {
-    const div = document.createElement('div');
-    div.className = 'playlist-item';
-    if (i === currentIndex) div.classList.add('current');
-    
-    div.textContent = item.name || item.url.split('/').pop() || 'Sem título';
-    div.title = item.url;
-    
-    div.onclick = () => playItem(i);
-    playlistEl.appendChild(div);
-  });
-}
-
-function playItem(index) {
-  if (index < 0 || index >= currentPlaylist.length) return;
-  
-  currentIndex = index;
-  renderPlaylist();
-  
-  const item = currentPlaylist[index];
-  player.src = item.url;
-  player.title = item.name || 'Reproduzindo...';
-  
-  player.play().catch(e => console.log("Autoplay bloqueado:", e));
-  
-  saveState();
-}
-
-player.onended = () => {
-  if (currentIndex < currentPlaylist.length - 1) {
-    playItem(currentIndex + 1);
-  }
-};
-
-// ======================
-//  CARREGAR M3U via URL
-// ======================
-async function loadM3UFromUrl() {
-  const url = document.getElementById('m3uUrl').value.trim();
-  if (!url) return alert('Digite uma URL válida!');
-
-  try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error('Falha ao carregar lista');
-    
-    const text = await response.text();
-    parseAndLoadM3U(text, url);
-    
-  } catch(e) {
-    alert('Erro ao carregar a lista M3U:\n' + e.message);
-  }
-}
-
-// ======================
-//  PARSE M3U (simples)
-// ======================
-function parseAndLoadM3U(text, baseUrl = '') {
-  const lines = text.split('\n').map(l => l.trim());
-  const items = [];
-  
-  let currentName = null;
-
-  for (const line of lines) {
-    if (line.startsWith('#EXTINF')) {
-      // tenta pegar nome (bem simples)
-      const nameMatch = line.match(/,(.+)/);
-      currentName = nameMatch ? nameMatch[1].trim() : null;
-    }
-    else if (line && !line.startsWith('#')) {
-      let finalUrl = line;
-      if (!line.startsWith('http') && baseUrl) {
-        try {
-          finalUrl = new URL(line, baseUrl).href;
-        } catch(_) {}
-      }
-      
-      items.push({
-        name: currentName || finalUrl.split('/').pop(),
-        url: finalUrl
-      });
-      currentName = null;
-    }
-  }
-
-  if (items.length > 0) {
-    currentPlaylist = items;
-    currentIndex = 0;
-    renderPlaylist();
-    playItem(0);
-    saveState();
-  } else {
-    alert('Nenhum canal válido encontrado na lista :(');
-  }
-}
-
-// ======================
-//  ARQUIVOS LOCAIS
-// ======================
-function loadLocalFiles() {
-  const input = document.getElementById('localFiles');
-  const files = input.files;
-  
-  if (!files?.length) return;
-
-  const newItems = Array.from(files).map(file => ({
-    name: file.name,
-    url: URL.createObjectURL(file)
-  }));
-
-  // Adiciona no final da playlist atual
-  currentPlaylist = [...currentPlaylist, ...newItems];
-  
-  if (currentIndex === -1 && currentPlaylist.length > 0) {
-    currentIndex = 0;
-  }
-
-  renderPlaylist();
-  saveState();
-
-  // limpa input
-  input.value = '';
-}
-
-// Inicialização
-loadLastState();
-
-// Teclas rápidas (opcional)
-document.addEventListener('keydown', e => {
-  if (e.code === 'ArrowRight' && currentIndex < currentPlaylist.length - 1) {
-    playItem(currentIndex + 1);
-  }
-  if (e.code === 'ArrowLeft' && currentIndex > 0) {
-    playItem(currentIndex - 1);
-  }
-});
-</script>
 </body>
 </html>
